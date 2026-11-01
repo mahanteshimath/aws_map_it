@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Whose Smoke Is It? Trace North India's air back to the fires it crossed</title>
+  <meta name="description" content="Click any place and hour this season: the map sews the air back 48 hours along the real wind and lights up the satellite-detected farm fires it crossed, beside measured PM2.5. Open data on AWS + Amazon Location Service." />
+  <meta property="og:title" content="Whose Smoke Is It?" />
+  <meta property="og:description" content="Trace the air any North Indian city breathes back to the farm fires it crossed, hour by hour, this smog season." />
+  <meta property="og:image" content="/og.png" />
+  <meta name="theme-color" content="#3e0c17" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <a class="skip" href="#border-canvas">Skip to the season timeline</a>
+  <main>
+    <div id="map" role="region" aria-label="Map of the North Indian plain. Click anywhere to trace its air."></div>
+    <div class="weave" aria-hidden="true"></div>
+
+    <section id="plaque" class="plaque" aria-labelledby="place">
+      <div id="cities" class="tags" role="group" aria-label="Preset cities"></div>
+      <h2 id="place" class="place">Delhi</h2>
+      <p id="when" class="when"></p>
+      <div class="reading">
+        <span id="pm" class="pm num" aria-live="polite">–</span>
+        <span class="reading-side">
+          <span id="band" class="band">–</span>
+          <span id="pm-note" class="pm-note"></span>
+        </span>
+      </div>
+      <div id="mode" class="tags mode" role="group" aria-label="Direction">
+        <button type="button" class="tag" data-mode="back" aria-pressed="true">Where did this air come from?</button>
+        <button type="button" class="tag" data-mode="fwd" aria-pressed="false">Where does it go next?</button>
+      </div>
+      <div id="finding" class="finding" aria-live="polite"><p>Sewing the season…</p></div>
+      <p id="season" class="season"></p>
+      <button id="play" type="button" class="tag satin play">Play the story</button>
+    </section>
+
+    <div class="tools">
+      <h1 class="brand"><svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 20 12 12 22 4 12Z" /><path d="M12 6.5 16.4 12 12 17.5 7.6 12Z" /></svg>Whose Smoke Is It?</h1>
+      <div class="search" role="search">
+        <label for="q" class="sr">Search a town or locality</label>
+        <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search your town"
+          role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-list" />
+        <ul id="q-list" role="listbox" hidden></ul>
+      </div>
+      <button id="method-open" type="button" class="tag" aria-expanded="false" aria-controls="method">Method &amp; data</button>
+    </div>
+
+    <div id="caption" class="caption" role="status" aria-live="polite" hidden>
+      <p id="caption-text"></p>
+      <div class="caption-ctl">
+        <button id="tour-pause" type="button" class="tag" aria-pressed="false">Pause</button>
+        <button id="tour-next" type="button" class="tag">Next</button>
+        <button id="tour-exit" type="button" class="tag">Explore</button>
+      </div>
+    </div>
+
+    <footer id="border" class="border">
+      <div class="border-head">
+        <button id="border-play" type="button" class="tag mini" aria-pressed="false">Play season</button>
+        <span class="border-label"></span>
+        <span class="legend" aria-hidden="true">
+          <i class="lg-fire"></i>fires on the air's path
+          <i class="lg-pm"></i>PM2.5 (faint = model)
+        </span>
+      </div>
+      <canvas id="border-canvas" tabindex="0" role="slider" aria-label="Season timeline: choose the hour the air arrived"
+        aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"></canvas>
+    </footer>
+
+    <aside id="method" class="drawer" aria-labelledby="method-title" hidden>
+      <div class="drawer-head">
+        <h2 id="method-title">How the thread is sewn</h2>
+        <button id="method-close" type="button" class="tag">Close</button>
+      </div>
+      <p>For the place and hour you choose, the map traces the air backwards 48 hours through the hourly wind (100 m and about 1.5 km above ground, 0.5° grid). Ten threads start a little apart and at two heights; the bright one is the centre, the faint ones show how sure the path is.</p>
+      <p>A fire counts as crossed when a thread passes within 25 km of it, from 3 hours before the satellite saw it to 18 hours after, because crop residue smoulders and smoke lingers. Gold diamonds are fires detected by the NOAA-20, NOAA-21 and Suomi NPP satellites. Repeat sightings of the same field in one overpass are merged.</p>
+      <h3>What the season shows</h3>
+      <table class="stats">
+        <thead><tr><th scope="col">City</th><th scope="col">Days measured</th><th scope="col">PM2.5, most-fire days</th><th scope="col">PM2.5, fewest-fire days</th><th scope="col">Rank correlation</th><th scope="col">With season trend removed</th></tr></thead>
+        <tbody id="stats-body"></tbody>
+      </table>
+      <p class="small">"Most" and "fewest" are the top and bottom quarter of measured days by fires on the air's path. PM2.5 is the daily mean of the city's stations (OpenAQ). A rank correlation of 1 would mean the two always rise and fall together; removing the season's trend checks that the link is not just October getting colder and stiller.</p>
+      <h3>What it does not say</h3>
+      <ul class="limits">
+        <li>It is not a dispersion model. It shows where air came from, not how much smoke it carried.</li>
+        <li>Fires are one source among many. Traffic, industry, dust, festivals and still air all raise PM2.5.</li>
+        <li>Satellites miss small fires and fires under cloud, so counts are a floor.</li>
+        <li>No district, state or country is blamed. Farmers burn stubble because the window between the rice harvest and wheat sowing is short.</li>
+        <li>The newest few days show model PM2.5 (CAMS) until station data is published.</li>
+      </ul>
+      <h3>Data</h3>
+      <ul id="sources" class="sources"></ul>
+      <p class="small">Basemap, place search, reverse geocoding and road distances: Amazon Location Service (India political view). Pipeline: AWS Lambda, Amazon S3, Amazon S3 Tables (Apache Iceberg), Amazon Athena, Amazon CloudFront.</p>
+      <p id="updated" class="small"></p>
+      <p class="small"><a id="repo" href="https://github.com/mahanteshimath/aws_map_it" rel="noopener" target="_blank">Code and reuse guide on GitHub</a></p>
+    </aside>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

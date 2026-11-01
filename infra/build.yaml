@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Whose Smoke Is It? - builds the pipeline's Lambda container image in AWS CodeBuild
+  (no local Docker needed) and stores it in Amazon ECR.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: whose-smoke
+
+Resources:
+  Repository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub ${ProjectName}-ingest
+      EmptyOnDelete: true
+      LifecyclePolicy:
+        LifecyclePolicyText: >-
+          {"rules":[{"rulePriority":1,"description":"keep 5","selection":{"tagStatus":"any","countType":"imageCountMoreThan","countNumber":5},"action":{"type":"expire"}}]}
+
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ProjectName}-build-${AWS::AccountId}
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-sources
+            Status: Enabled
+            ExpirationInDays: 14
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  BuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: { Service: codebuild.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: build
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: [logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents]
+                Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ProjectName}-*
+              - Effect: Allow
+                Action: [s3:GetObject, s3:GetObjectVersion]
+                Resource: !Sub ${SourceBucket.Arn}/*
+              - Effect: Allow
+                Action: ecr:GetAuthorizationToken
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                  - ecr:PutImage
+                  - ecr:BatchGetImage
+                  - ecr:GetDownloadUrlForLayer
+                Resource: !GetAtt Repository.Arn
+
+  Build:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${ProjectName}-image
+      ServiceRole: !GetAtt BuildRole.Arn
+      Source:
+        Type: S3
+        Location: !Sub ${SourceBucket}/pipeline.zip
+        BuildSpec: |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPO_URI
+            build:
+              commands:
+                - docker build --provenance=false -t $REPO_URI:$IMAGE_TAG .
+            post_build:
+              commands:
+                - docker push $REPO_URI:$IMAGE_TAG
+      Artifacts: { Type: NO_ARTIFACTS }
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_MEDIUM
+        Image: aws/codebuild/standard:7.0
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - { Name: REPO_URI, Value: !GetAtt Repository.RepositoryUri }
+          - { Name: IMAGE_TAG, Value: latest }
+      TimeoutInMinutes: 30
+
+Outputs:
+  RepositoryUri:
+    Value: !GetAtt Repository.RepositoryUri
+  SourceBucketName:
+    Value: !Ref SourceBucket
+  BuildProjectName:
+    Value: !Ref Build

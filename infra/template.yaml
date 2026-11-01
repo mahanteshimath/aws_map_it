@@ -1,0 +1,231 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Whose Smoke Is It? - static map on S3 + CloudFront, Amazon Location Service API key,
+  a daily container Lambda that rebuilds the data from the Registry of Open Data on AWS,
+  and Amazon S3 Tables (Apache Iceberg) holding the season tables for Athena.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: whose-smoke
+  ScheduleExpression:
+    Type: String
+    Default: cron(30 1 * * ? *)
+    Description: Daily refresh (UTC). 01:30 UTC = 07:00 IST, after the night satellite pass is published.
+  LocalDevOrigin:
+    Type: String
+    Default: http://localhost:5173/*
+    Description: Extra referrer allowed to use the Location API key during development.
+  IngestImageUri:
+    Type: String
+    Description: ECR image for the pipeline Lambda, built by infra/build.yaml (CodeBuild).
+
+Resources:
+  # ---------- Static site ----------
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ProjectName}-site-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+
+  RawBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ProjectName}-raw-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+
+  SiteOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub ${ProjectName}-oac
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  SecurityHeaders:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub ${ProjectName}-headers
+        SecurityHeadersConfig:
+          ContentTypeOptions: { Override: true }
+          FrameOptions: { FrameOption: DENY, Override: true }
+          ReferrerPolicy: { ReferrerPolicy: strict-origin-when-cross-origin, Override: true }
+          StrictTransportSecurity: { AccessControlMaxAgeSec: 31536000, IncludeSubdomains: true, Override: true }
+          ContentSecurityPolicy:
+            Override: true
+            ContentSecurityPolicy: !Sub >-
+              default-src 'self';
+              script-src 'self';
+              style-src 'self' 'unsafe-inline';
+              img-src 'self' data: blob: https://*.geo.${AWS::Region}.amazonaws.com;
+              font-src 'self' data:;
+              connect-src 'self' https://*.geo.${AWS::Region}.amazonaws.com;
+              worker-src 'self' blob:;
+              child-src blob:;
+              frame-ancestors 'none'
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub ${ProjectName} map
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        PriceClass: PriceClass_200
+        Origins:
+          - Id: site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt SiteOAC.Id
+            S3OriginConfig: { OriginAccessIdentity: "" }
+        DefaultCacheBehavior:
+          TargetOriginId: site
+          ViewerProtocolPolicy: redirect-to-https
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # Managed-CachingOptimized (honours Cache-Control)
+          ResponseHeadersPolicyId: !Ref SecurityHeaders
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /index.html
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub ${SiteBucket.Arn}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}
+
+  # ---------- Amazon Location Service ----------
+  LocationKey:
+    Type: AWS::Location::APIKey
+    Properties:
+      KeyName: !Sub ${ProjectName}-web
+      Description: Browser key for the basemap, place search, reverse geocoding and routes. Referrer-restricted.
+      NoExpiry: true
+      Restrictions:
+        AllowActions:
+          - geo-maps:GetTile
+          - geo-maps:GetStaticMap
+          - geo-places:Autocomplete
+          - geo-places:Geocode
+          - geo-places:GetPlace
+          - geo-places:ReverseGeocode
+          - geo-places:Suggest
+          - geo-routes:CalculateRoutes
+        AllowResources:
+          - !Sub arn:aws:geo-maps:${AWS::Region}::provider/default
+          - !Sub arn:aws:geo-places:${AWS::Region}::provider/default
+          - !Sub arn:aws:geo-routes:${AWS::Region}::provider/default
+        AllowReferers:
+          - !Sub https://${Distribution.DomainName}/*
+          - !Ref LocalDevOrigin
+
+  # ---------- Data lake: Amazon S3 Tables (Iceberg) ----------
+  TableBucket:
+    Type: AWS::S3Tables::TableBucket
+    Properties:
+      TableBucketName: !Sub ${ProjectName}-lake
+
+  AthenaResultsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ProjectName}-athena-${AWS::AccountId}
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-results
+            Status: Enabled
+            ExpirationInDays: 7
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  AthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Sub ${ProjectName}
+      RecursiveDeleteOption: true
+      WorkGroupConfiguration:
+        EnforceWorkGroupConfiguration: true
+        ResultConfiguration:
+          OutputLocation: !Sub s3://${AthenaResultsBucket}/results/
+
+  # ---------- Daily pipeline ----------
+  IngestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${ProjectName}-ingest
+      PackageType: Image
+      ImageUri: !Ref IngestImageUri
+      Architectures: [x86_64]
+      MemorySize: 3008
+      EphemeralStorage: { Size: 2048 }
+      Timeout: 900
+      Environment:
+        Variables:
+          RAW_STORE: !Sub s3://${RawBucket}/cache
+          SITE_STORE: !Sub s3://${SiteBucket}/data
+          TABLE_BUCKET_ARN: !GetAtt TableBucket.TableBucketARN
+          DISTRIBUTION_ID: !Ref Distribution
+          HOME: /tmp
+      Policies:
+        - S3CrudPolicy: { BucketName: !Ref RawBucket }
+        - S3CrudPolicy: { BucketName: !Ref SiteBucket }
+        - Statement:
+            - Effect: Allow
+              Action: cloudfront:CreateInvalidation
+              Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}
+            - Effect: Allow
+              Action: s3tables:*
+              Resource:
+                - !GetAtt TableBucket.TableBucketARN
+                - !Sub ${TableBucket.TableBucketARN}/*
+      Events:
+        Daily:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: !Ref ScheduleExpression
+            Input: '{"refresh_days": 3}'
+            RetryPolicy: { MaximumRetryAttempts: 1 }
+
+Outputs:
+  SiteUrl:
+    Value: !Sub https://${Distribution.DomainName}
+  SiteBucketName:
+    Value: !Ref SiteBucket
+  RawBucketName:
+    Value: !Ref RawBucket
+  DistributionId:
+    Value: !Ref Distribution
+  LocationKeyName:
+    Value: !Ref LocationKey
+  TableBucketArn:
+    Value: !GetAtt TableBucket.TableBucketARN
+  IngestFunctionName:
+    Value: !Ref IngestFunction

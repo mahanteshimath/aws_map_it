@@ -1,0 +1,15 @@
+# local caches and generated data
+cache/
+web/public/data/
+web/public/config.json
+web/node_modules/
+web/dist/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+video/build/
+video/out/
+.impeccable/review/
+.impeccable/config.local.json
+.cortex/
+.aws-sam/
