@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T00:00:00Z",
+  "title": "Design System: Whose Smoke Is It?",
+  "extensions": {
+    "colorMeta": {
+      "ground": { "role": "neutral", "displayName": "Madder Khaddar", "canonical": "oklch(31.7% 0.100 15)", "tonalRamp": ["#210003", "#490314", "#6a242e", "#8d434b", "#b0636a", "#d5848a", "#feaaaf", "#fee8e9"] },
+      "ground-deep": { "role": "neutral", "displayName": "Deep Madder", "canonical": "oklch(24.8% 0.077 12)", "tonalRamp": ["#210004", "#410f1a", "#622d35", "#834a52", "#a66a71", "#ca8b92", "#f2b0b7", "#ffe8ea"] },
+      "ground-night": { "role": "neutral", "displayName": "Night Madder", "canonical": "oklch(19.9% 0.057 10)", "tonalRamp": ["#1d0106", "#3b171e", "#5a3339", "#7a5056", "#9c6f76", "#bf9097", "#e6b5bc", "#ffe8eb"] },
+      "lift": { "role": "neutral", "displayName": "Madder Lift", "canonical": "oklch(36.7% 0.110 15)", "tonalRamp": ["#220003", "#4b0013", "#6e202d", "#91404a", "#b56068", "#da8189", "#ffa9af", "#fde9ea"] },
+      "indigo": { "role": "neutral", "displayName": "Indigo Black", "canonical": "oklch(22.0% 0.053 286)", "tonalRamp": ["#0a0620", "#22203c", "#3d3b5b", "#5b597b", "#7a799c", "#9b9abf", "#c0c0e6", "#ededfd"] },
+      "indigo-soft": { "role": "neutral", "displayName": "Soft Indigo", "canonical": "oklch(28.6% 0.065 289)", "tonalRamp": ["#0c0424", "#241d41", "#3f3a60", "#5c5880", "#7c77a2", "#9d98c5", "#c2beec", "#eeecfe"] },
+      "gold": { "role": "primary", "displayName": "Phulkari Gold Silk", "canonical": "oklch(81.1% 0.153 82)", "tonalRamp": ["#140800", "#322100", "#543b00", "#795704", "#a17501", "#ca940f", "#f5b936", "#feeccd"] },
+      "gold-light": { "role": "primary", "displayName": "Gold Sheen", "canonical": "oklch(89.8% 0.125 89)", "tonalRamp": ["#130900", "#2f2200", "#503d00", "#745a04", "#9a7800", "#be9a33", "#e5c05d", "#ffedc1"] },
+      "gold-deep": { "role": "primary", "displayName": "Gold Shade", "canonical": "oklch(58.2% 0.122 70)", "tonalRamp": ["#170700", "#351e00", "#593702", "#825203", "#ab6e11", "#ce903f", "#f7b666", "#feebd6"] },
+      "white": { "role": "neutral", "displayName": "Unbleached Silk", "canonical": "oklch(95.0% 0.027 88)", "tonalRamp": ["#100a01", "#292315", "#463f30", "#645d4d", "#847d6c", "#a59e8c", "#cbc3b1", "#f6eedb"] },
+      "cream": { "role": "neutral", "displayName": "Raw Cotton", "canonical": "oklch(88.6% 0.046 81)", "tonalRamp": ["#150800", "#2f2106", "#4c3d23", "#6b5b40", "#8b7b5e", "#ad9c7f", "#d3c2a3", "#feeccd"] },
+      "cream-soft": { "role": "neutral", "displayName": "Raw Cotton, Soft", "canonical": "rgba(233, 215, 184, 0.78)", "tonalRamp": ["#150800", "#2f2106", "#4c3d23", "#6b5b40", "#8b7b5e", "#ad9c7f", "#d3c2a3", "#feeccd"] },
+      "cream-faint": { "role": "neutral", "displayName": "Raw Cotton, Faint", "canonical": "rgba(233, 215, 184, 0.55)", "tonalRamp": ["#150800", "#2f2106", "#4c3d23", "#6b5b40", "#8b7b5e", "#ad9c7f", "#d3c2a3", "#feeccd"] },
+      "stitch": { "role": "neutral", "displayName": "Running Stitch", "canonical": "rgba(246, 238, 219, 0.55)", "tonalRamp": ["#100a01", "#292315", "#463f30", "#645d4d", "#847d6c", "#a59e8c", "#cbc3b1", "#f6eedb"] },
+      "peacock": { "role": "secondary", "displayName": "Peacock Thread", "canonical": "oklch(75.4% 0.103 200)", "tonalRamp": ["#000f10", "#012a2c", "#004a4d", "#096b6f", "#058f94", "#3ab2b8", "#67d8de", "#c0fbfe"] },
+      "pm-good": { "role": "tertiary", "displayName": "AQI Good (≤30)", "canonical": "oklch(90.3% 0.055 136)", "tonalRamp": ["#021000", "#172a0d", "#324629", "#506546", "#6f8564", "#8fa785", "#b4cdaa", "#def8d3"] },
+      "pm-satisfactory": { "role": "tertiary", "displayName": "AQI Satisfactory (≤60)", "canonical": "oklch(90.7% 0.092 102)", "tonalRamp": ["#0f0b00", "#2a2500", "#484102", "#685f14", "#887f39", "#aaa15b", "#d0c780", "#faf1a9"] },
+      "pm-moderate": { "role": "tertiary", "displayName": "AQI Moderate (≤90)", "canonical": "oklch(81.4% 0.123 73)", "tonalRamp": ["#170700", "#351e00", "#593800", "#805200", "#a96f0a", "#cd913c", "#f5b764", "#feebd5"] },
+      "pm-poor": { "role": "tertiary", "displayName": "AQI Poor (≤120)", "canonical": "oklch(70.3% 0.148 36)", "tonalRamp": ["#220000", "#480900", "#741b00", "#9f3415", "#c55739", "#eb795a", "#fdad97", "#fee9e4"] },
+      "pm-very-poor": { "role": "tertiary", "displayName": "AQI Very Poor (≤250)", "canonical": "oklch(60.9% 0.185 2)", "tonalRamp": ["#200009", "#490020", "#78003a", "#a91055", "#cf3f75", "#f76395", "#fea7bf", "#fee8ed"] },
+      "pm-severe": { "role": "tertiary", "displayName": "AQI Severe (>250)", "canonical": "oklch(50.6% 0.184 339)", "tonalRamp": ["#1e0016", "#440035", "#71005b", "#9a207e", "#bf47a0", "#e56ac3", "#fea0e1", "#fee7f5"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (PM numeral)", "purpose": "The plaque's PM2.5 figure only; tabular lining figures that tick to new values. 46px on mobile." },
+      "headline": { "displayName": "Headline (place name)", "purpose": "Uppercase place name on the plaque; same voice for the drawer title (30px) and wordmark (23px)." },
+      "title": { "displayName": "Title", "purpose": "Drawer section heads in gold-light; popup heads at 18px in white." },
+      "body": { "displayName": "Body", "purpose": "Findings (15.5px, 40ch), caption (19px), drawer text (15px, 62ch), notes (13–13.5px cream-soft)." },
+      "label": { "displayName": "Label", "purpose": "Cloth tags, band chip (14px), border label, search-result names; mini tags at 13px." }
+    },
+    "shadows": [
+      { "name": "panel-float", "value": "0 14px 34px rgba(12, 2, 6, 0.5), 0 2px 6px rgba(12, 2, 6, 0.4)", "purpose": "The plaque floating over the map cloth." },
+      { "name": "caption-float", "value": "0 14px 34px rgba(12, 2, 6, 0.55)", "purpose": "Tour caption above the border." },
+      { "name": "popover", "value": "0 12px 28px rgba(12, 2, 6, 0.55)", "purpose": "Search result list; map popups use 0 14px 30px." },
+      { "name": "sheet-edge", "value": "-18px 0 40px rgba(12, 2, 6, 0.55)", "purpose": "Method drawer's leading edge." },
+      { "name": "border-lift", "value": "0 -10px 28px rgba(12, 2, 6, 0.45)", "purpose": "Embroidered border casting upward onto the map." },
+      { "name": "map-control", "value": "0 6px 16px rgba(12, 2, 6, 0.5)", "purpose": "MapLibre zoom group." },
+      { "name": "thread-proud", "value": "drop-shadow(0.8px 1.4px 1px rgba(20, 4, 8, 0.55))", "purpose": "Contact shadow under the thread (#14040a at 50%, translate 0.9/1.6, blur 1), satin diamonds, cross-stitches and the needle." }
+    ],
+    "motion": [
+      { "name": "tag-state", "value": "160ms cubic-bezier(.2, .7, .2, 1)", "purpose": "Tag background, colour and stitch-edge changes on hover/press." },
+      { "name": "cloth-ease", "value": "cubic-bezier(.16, 1, .3, 1)", "purpose": "Caption rise (520ms, 6px lift, 2px blur clearing) and drawer slide (380ms, 32px)." },
+      { "name": "sew", "value": "2200ms ease-out cubic (1 - (1 - k)^3)", "purpose": "The thread drawn along the real trace; fires light as the needle reaches them." },
+      { "name": "fire-light", "value": "260ms", "purpose": "Satin diamond icon-opacity transition as each fire lights." },
+      { "name": "tick", "value": "520ms ease-out cubic", "purpose": "Fixed-figure counters turning over to a new value." },
+      { "name": "season-step", "value": "160ms per 3-hour trace", "purpose": "Season playback cadence along the border." },
+      { "name": "camera", "value": "1200ms flyTo / 1600ms fit to trace", "purpose": "Map moves to a searched place or to frame the trace." },
+      { "name": "reduced-motion", "value": "0ms", "purpose": "prefers-reduced-motion: CSS animation and transition off; sew, tick and camera resolve instantly." }
+    ],
+    "breakpoints": [
+      { "name": "sheet", "value": "760px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Cloth Tag",
+      "kind": "button",
+      "refersTo": "tag",
+      "description": "The default control everywhere: translucent cloth hemmed in a dashed running stitch.",
+      "html": "<div class=\"ds-cloth\"><button class=\"ds-tag\" type=\"button\">Method &amp; data</button><button class=\"ds-tag\" type=\"button\">Next</button><button class=\"ds-tag\" type=\"button\" disabled>Explore</button></div>",
+      "css": ".ds-cloth { display: inline-flex; flex-wrap: wrap; gap: 6px; padding: 16px; background-color: var(--ground-night, #2a0810); border-radius: 14px; } .ds-tag { font: 600 15px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); letter-spacing: 0.01em; color: var(--cream, #e9d7b8); background: rgba(30, 6, 12, 0.35); border: 1.5px dashed var(--stitch, rgba(246, 238, 219, 0.55)); border-radius: 7px; padding: 7px 11px 6px; cursor: pointer; transition: background-color 160ms cubic-bezier(.2, .7, .2, 1), color 160ms, border-color 160ms; } .ds-tag:hover { background: rgba(246, 238, 219, 0.1); border-color: rgba(246, 238, 219, 0.8); } .ds-tag:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; } .ds-tag:disabled { opacity: 0.5; cursor: default; }"
+    },
+    {
+      "name": "Pressed Tag (White Silk)",
+      "kind": "chip",
+      "refersTo": "tag-pressed",
+      "description": "A chosen toggle (city preset, direction, pause): satin-filled in white silk, never gold.",
+      "html": "<div class=\"ds-cloth\"><button class=\"ds-tag\" type=\"button\" aria-pressed=\"true\">Where did this air come from?</button><button class=\"ds-tag\" type=\"button\" aria-pressed=\"false\">Where does it go next?</button></div>",
+      "css": ".ds-cloth { display: inline-flex; flex-wrap: wrap; gap: 6px; padding: 16px; background-color: var(--ground-night, #2a0810); border-radius: 14px; } .ds-tag { font: 600 14px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); letter-spacing: 0.01em; color: var(--cream, #e9d7b8); background: rgba(30, 6, 12, 0.35); border: 1.5px dashed var(--stitch, rgba(246, 238, 219, 0.55)); border-radius: 7px; padding: 7px 11px 6px; cursor: pointer; transition: background-color 160ms cubic-bezier(.2, .7, .2, 1), color 160ms, border-color 160ms; } .ds-tag:hover { background: rgba(246, 238, 219, 0.1); border-color: rgba(246, 238, 219, 0.8); } .ds-tag:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; } .ds-tag[aria-pressed=\"true\"] { background: repeating-linear-gradient(115deg, #f1e7d1 0 3px, #fffaf0 3px 4.5px, #e2d5b9 4.5px 7px); color: var(--ground-night, #2a0810); border-style: solid; border-color: #cbbd9f; } .ds-tag[aria-pressed=\"true\"]:hover { filter: brightness(1.06); }"
+    },
+    {
+      "name": "Satin Primary Tag",
+      "kind": "button",
+      "refersTo": "tag-satin",
+      "description": "The one primary action in a panel, filled in gold satin (Play the story; Where did this smoke go?).",
+      "html": "<div class=\"ds-cloth\"><button class=\"ds-tag-satin\" type=\"button\">Play the story</button></div>",
+      "css": ".ds-cloth { display: inline-flex; gap: 6px; padding: 16px; background-color: var(--ground-night, #2a0810); border-radius: 14px; } .ds-tag-satin { font: 600 16px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); letter-spacing: 0.01em; color: var(--ground-night, #2a0810); background: repeating-linear-gradient(115deg, #f2b632 0 3px, #ffd977 3px 4.5px, #e9a91f 4.5px 7px); border: 1.5px solid var(--gold-deep, #a86c0c); border-radius: 7px; padding: 9px 14px 8px; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.4); cursor: pointer; transition: filter 160ms cubic-bezier(.2, .7, .2, 1); } .ds-tag-satin:hover { filter: brightness(1.06); } .ds-tag-satin:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "Town search in the tool row: the tag's stitch edge on a denser cloth, gold caret.",
+      "html": "<div class=\"ds-ground\"><label class=\"ds-sr\" for=\"ds-q\">Search a town or locality</label><input id=\"ds-q\" class=\"ds-search\" type=\"search\" placeholder=\"Search your town\" /></div>",
+      "css": ".ds-ground { padding: 16px; background-color: var(--ground, #5a1521); border-radius: 14px; } .ds-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } .ds-search { width: 250px; font: 400 15px var(--body, \"Mukta\", system-ui, sans-serif); color: var(--cream, #e9d7b8); background: rgba(30, 6, 12, 0.72); border: 1.5px dashed var(--stitch, rgba(246, 238, 219, 0.55)); border-radius: 7px; padding: 7px 12px; caret-color: var(--gold-light, #ffd977); transition: border-color 160ms cubic-bezier(.2, .7, .2, 1); } .ds-search::placeholder { color: rgba(233, 215, 184, 0.55); } .ds-search:hover { border-color: rgba(246, 238, 219, 0.8); } .ds-search:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; }"
+    },
+    {
+      "name": "Plaque",
+      "kind": "card",
+      "refersTo": "plaque",
+      "description": "The place reading: a darker piece of the cloth with a stitched inner hem, place name, ticking PM2.5 numeral, band chip and the one satin action.",
+      "html": "<section class=\"ds-plaque\"><h2 class=\"ds-place\">Delhi</h2><p class=\"ds-when\">Thu 29 Oct, 14:00 IST</p><div class=\"ds-reading\"><span class=\"ds-pm\">104</span><span class=\"ds-band\" style=\"--band:#d6457a\">Very poor</span></div><button class=\"ds-tag-satin\" type=\"button\">Play the story</button></section>",
+      "css": ".ds-plaque { position: relative; width: min(392px, 100%); padding: 18px 20px; color: var(--cream, #e9d7b8); background-color: var(--ground-night, #2a0810); background-image: var(--weave, url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 1.5h6M0 4.5h6' stroke='%23ffe6d2' stroke-opacity='.04'/%3E%3Cpath d='M1.5 0v6M4.5 0v6' stroke='%23000' stroke-opacity='.05'/%3E%3C/svg%3E\")); border-radius: 14px; box-shadow: 0 14px 34px rgba(12, 2, 6, 0.5), 0 2px 6px rgba(12, 2, 6, 0.4); font: 400 16px/1.45 var(--body, \"Mukta\", system-ui, sans-serif); } .ds-plaque::before { content: \"\"; position: absolute; inset: 6px; pointer-events: none; border: 1.5px dashed rgba(246, 238, 219, 0.32); border-radius: 9px; } .ds-place { margin: 0; font: 700 clamp(40px, 5.2vw, 56px)/0.95 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); letter-spacing: 0.02em; text-transform: uppercase; color: var(--white, #f6eedb); } .ds-when { margin: 6px 0 0; font-size: 15px; color: rgba(233, 215, 184, 0.78); } .ds-reading { display: flex; align-items: center; gap: 14px; margin: 10px 0 4px; } .ds-pm { font: 600 clamp(60px, 7vw, 82px)/0.9 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); font-variant-numeric: tabular-nums lining-nums; color: var(--white, #f6eedb); min-width: 2.2ch; text-align: right; } .ds-band { font: 600 14px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); color: var(--ground-night, #2a0810); background: var(--band, #e9d7b8); border-radius: 4px; padding: 5px 8px 3px; } .ds-tag-satin { position: relative; margin-top: 12px; font: 600 16px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); color: var(--ground-night, #2a0810); background: repeating-linear-gradient(115deg, #f2b632 0 3px, #ffd977 3px 4.5px, #e9a91f 4.5px 7px); border: 1.5px solid var(--gold-deep, #a86c0c); border-radius: 7px; padding: 9px 14px 8px; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.4); cursor: pointer; } .ds-tag-satin:hover { filter: brightness(1.06); } .ds-tag-satin:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; }"
+    },
+    {
+      "name": "AQI Band Chip",
+      "kind": "chip",
+      "refersTo": "band-chip",
+      "description": "The PM2.5 band beside the numeral: solid AQI colour carrying the band's name, so colour never stands alone.",
+      "html": "<div class=\"ds-cloth\"><span class=\"ds-band\" style=\"--band:#cfe8c4\">Good</span><span class=\"ds-band\" style=\"--band:#ece39b\">Satisfactory</span><span class=\"ds-band\" style=\"--band:#f3b562\">Moderate</span><span class=\"ds-band\" style=\"--band:#ec7a5b\">Poor</span><span class=\"ds-band\" style=\"--band:#d6457a\">Very poor</span><span class=\"ds-band\" style=\"--band:#a32a86\">Severe</span></div>",
+      "css": ".ds-cloth { display: inline-flex; flex-wrap: wrap; gap: 6px; padding: 16px; background-color: var(--ground-night, #2a0810); border-radius: 14px; } .ds-band { font: 600 14px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); color: var(--ground-night, #2a0810); background: var(--band, #e9d7b8); border-radius: 4px; padding: 5px 8px 3px; }"
+    },
+    {
+      "name": "Embroidered Border",
+      "kind": "custom",
+      "refersTo": "embroidered-border",
+      "description": "The season timeline (canvas in the build): running-stitch hems, a PM2.5 strip, gold satin columns of fire activity on the air's path, and a white needle.",
+      "html": "<div class=\"ds-border\"><div class=\"ds-border-head\"><button class=\"ds-mini\" type=\"button\" aria-pressed=\"false\">Play season</button><span class=\"ds-border-label\">Delhi</span></div><div class=\"ds-border-cloth\"><div class=\"ds-pm-strip\"><i style=\"background:#ec7a5b\"></i><i style=\"background:#d6457a\"></i><i style=\"background:#d6457a\"></i><i style=\"background:#ec7a5b\"></i><i style=\"background:#f3b562\"></i><i style=\"background:#ece39b\"></i><i style=\"background:#cfe8c4\"></i><i style=\"background:#ece39b\"></i><i style=\"background:#f3b562\"></i><i style=\"background:#ec7a5b;opacity:.45\"></i><i style=\"background:#d6457a;opacity:.45\"></i><i style=\"background:#ec7a5b;opacity:.45\"></i></div><div class=\"ds-cols\"><i style=\"height:55%\"></i><i style=\"height:90%\"></i><i style=\"height:100%\"></i><i style=\"height:62%\"></i><i style=\"height:30%\"></i><i style=\"height:8%\"></i><i style=\"height:4%\"></i><i style=\"height:12%\"></i><i style=\"height:36%\"></i><i style=\"height:58%\"></i><i style=\"height:80%\"></i><i style=\"height:48%\"></i></div><span class=\"ds-needle\"></span></div></div>",
+      "css": ".ds-border { display: grid; grid-template-rows: auto 1fr; gap: 4px; width: 100%; max-width: 640px; height: 122px; padding: 8px 16px 6px; background-color: var(--ground-night, #2a0810); box-shadow: 0 -10px 28px rgba(12, 2, 6, 0.45); } .ds-border-head { display: flex; align-items: center; gap: 12px; } .ds-mini { font: 600 13px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); color: var(--cream, #e9d7b8); background: rgba(30, 6, 12, 0.35); border: 1.5px dashed var(--stitch, rgba(246, 238, 219, 0.55)); border-radius: 7px; padding: 5px 9px 4px; cursor: pointer; transition: background-color 160ms cubic-bezier(.2, .7, .2, 1), border-color 160ms; } .ds-mini:hover { background: rgba(246, 238, 219, 0.1); border-color: rgba(246, 238, 219, 0.8); } .ds-mini:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; } .ds-border-label { font: 600 15px var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); color: var(--cream, #e9d7b8); } .ds-border-cloth { position: relative; display: grid; grid-template-rows: 7px 1fr; gap: 8px; padding: 8px 18px 6px; border-top: 1.2px dashed rgba(246, 238, 219, 0.5); border-bottom: 1.2px dashed rgba(246, 238, 219, 0.5); } .ds-pm-strip, .ds-cols { display: flex; gap: 6px; } .ds-pm-strip i { flex: 1; height: 7px; } .ds-cols { align-items: flex-end; } .ds-cols i { flex: 1; min-height: 2px; background: linear-gradient(90deg, #f2b632 0 55%, #a86c0c 55%); } .ds-needle { position: absolute; left: 62%; top: 4px; bottom: 2px; width: 2px; background: var(--white, #f6eedb); } .ds-needle::before { content: \"\"; position: absolute; left: -3.5px; top: -2px; width: 9px; height: 9px; background: var(--white, #f6eedb); transform: rotate(45deg) scaleY(1.15); }"
+    },
+    {
+      "name": "Satin Diamond (fire mark)",
+      "kind": "custom",
+      "refersTo": "fire-mark",
+      "description": "A satellite fire as a gold satin-stitch lozenge with diagonal silk floats; unlit fires are dull floss. Lights over 260ms as the needle passes.",
+      "html": "<div class=\"ds-ground\"><span class=\"ds-fire\" role=\"img\" aria-label=\"Fire on the air's path\"></span><span class=\"ds-fire ds-fire-dim\" role=\"img\" aria-label=\"Fire off the path\"></span></div>",
+      "css": ".ds-ground { display: inline-flex; gap: 12px; padding: 16px; background-color: var(--ground, #5a1521); border-radius: 14px; } .ds-fire { display: inline-block; width: 44px; height: 44px; filter: drop-shadow(0.8px 1.4px 0 rgba(20, 4, 8, 0.55)); transition: opacity 260ms; } .ds-fire::before { content: \"\"; display: block; width: 100%; height: 100%; clip-path: polygon(50% 6%, 81.7% 50%, 50% 94%, 18.3% 50%); background: repeating-linear-gradient(121deg, #ffd977 0 2px, #a86c0c 2px 3.1px, #f2b632 3.1px 5.1px, #a86c0c 5.1px 6.2px, #f2b632 6.2px 8.2px, #a86c0c 8.2px 9.3px); } .ds-fire-dim { opacity: 0.38; } .ds-fire-dim::before { background: repeating-linear-gradient(121deg, #a8862f 0 2px, #6b4a16 2px 3.1px, #8a6b22 3.1px 5.1px, #6b4a16 5.1px 6.2px, #8a6b22 6.2px 8.2px, #6b4a16 8.2px 9.3px); }"
+    },
+    {
+      "name": "Running Thread",
+      "kind": "custom",
+      "refersTo": "thread",
+      "description": "The traced air: one bright white running stitch with a proud contact shadow, over faint 32% sibling threads. Peacock replaces white in forward mode.",
+      "html": "<div class=\"ds-ground\"><svg class=\"ds-thread\" viewBox=\"0 0 240 80\" width=\"240\" height=\"80\" aria-hidden=\"true\"><path class=\"ds-sib\" d=\"M10 64 C70 50 110 18 230 12\"/><path class=\"ds-sib\" d=\"M10 64 C80 62 130 36 230 30\"/><path class=\"ds-shadow\" d=\"M10 64 C75 56 120 26 230 20\"/><path class=\"ds-main\" d=\"M10 64 C75 56 120 26 230 20\"/></svg><svg class=\"ds-thread ds-fwd\" viewBox=\"0 0 240 80\" width=\"240\" height=\"80\" aria-hidden=\"true\"><path class=\"ds-sib\" d=\"M10 20 C70 30 120 52 230 66\"/><path class=\"ds-shadow\" d=\"M10 20 C75 26 120 48 230 58\"/><path class=\"ds-main\" d=\"M10 20 C75 26 120 48 230 58\"/></svg></div>",
+      "css": ".ds-ground { display: inline-flex; flex-wrap: wrap; gap: 12px; padding: 16px; background-color: var(--ground, #5a1521); border-radius: 14px; } .ds-thread path { fill: none; } .ds-sib { stroke: #f6eedb; stroke-opacity: 0.32; stroke-width: 1.1; stroke-dasharray: 1.54 1.76; } .ds-shadow { stroke: #14040a; stroke-opacity: 0.5; stroke-width: 5.6; stroke-linecap: round; transform: translate(0.9px, 1.6px); filter: blur(1px); } .ds-main { stroke: #f6eedb; stroke-width: 4; stroke-dasharray: 7.2 4.4; } .ds-fwd .ds-sib, .ds-fwd .ds-main { stroke: #4fc3c9; }"
+    },
+    {
+      "name": "City Knot Pin",
+      "kind": "custom",
+      "refersTo": "city-pin",
+      "description": "Preset cities on the map as French knots with a Khand name; the active city is a gold-satin knot with a larger gold-light name.",
+      "html": "<div class=\"ds-ground\"><button class=\"ds-pin\" type=\"button\"><span class=\"ds-knot\"></span><span class=\"ds-nm\">Lahore</span></button><button class=\"ds-pin ds-active\" type=\"button\"><span class=\"ds-knot\"></span><span class=\"ds-nm\">Delhi</span></button></div>",
+      "css": ".ds-ground { display: inline-flex; gap: 20px; padding: 16px; background-color: var(--ground, #5a1521); border-radius: 14px; } .ds-pin { display: flex; align-items: center; gap: 6px; background: none; border: 0; padding: 0; cursor: pointer; font: 600 16px/1 var(--display, \"Khand\", \"Mukta\", system-ui, sans-serif); color: var(--cream, #e9d7b8); text-shadow: 0 0 3px #3e0c17, 0 1px 2px #3e0c17, 0 0 8px #3e0c17; } .ds-knot { width: 13px; height: 13px; border-radius: 50%; background: var(--white, #f6eedb); box-shadow: 0 0 0 3px #3e0c17, 0 1.5px 3px 3px rgba(12, 2, 6, 0.6); } .ds-pin:hover .ds-nm { color: var(--white, #f6eedb); } .ds-pin:focus-visible { outline: 2px solid var(--gold-light, #ffd977); outline-offset: 2px; } .ds-active .ds-knot { background: repeating-linear-gradient(115deg, #f2b632 0 3px, #ffd977 3px 4.5px, #e9a91f 4.5px 7px); } .ds-active .ds-nm { color: var(--gold-light, #ffd977); font-size: 18px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Phulkari Cloth",
+    "overview": "The map is a length of madder-maroon handspun khaddar, and everything on it is needlework. Rivers and region lines are indigo thread sunk into the weave; farm fires are gold satin-stitch diamonds; the air a place breathed is a white running stitch sewn back along the real hourly wind, with nine faint sibling threads showing how sure the path is. Forward smoke is sewn in peacock thread. The season runs along the bottom as an embroidered border. Controls are cloth tags hemmed in running stitch.\n\nThe surface is full-bleed and map-led. Floating panels are pieces of the same cloth, a shade darker, with a stitched inner hem. Density stays low: one plaque, one tool row, one border, one bright thread. Motion follows the data: the thread is sewn at the pace of the wind trace, fires light as the needle passes, and counts tick over in fixed figures.\n\nConfirmed rejection: the near-black dashboard map with glowing dots and a stats sidebar.",
+    "keyCharacteristics": [
+      "Maroon cloth ground with a 6px weave texture over everything, map included.",
+      "Tags, fields and panel hems are edged in dashed running stitch; chosen things are satin-filled.",
+      "One bright edge: only the traced centre thread is a full-strength line.",
+      "Khand condensed caps for names and figures, Mukta for reading text, tabular figures that tick.",
+      "Soft, deep maroon-black shadows; nothing glows."
+    ],
+    "rules": [
+      { "name": "The One Bright Thread Rule", "body": "Only the traced centre thread is a full-strength white line (peacock forward). Sibling threads sit at 32%, country borders at 30% cream, region lines at 70% indigo, unlit fires at 14–38%. If another line is as bright as the thread, dim it.", "section": "colors" },
+      { "name": "The Silk Reserve Rule", "body": "Gold satin fill marks fire and the one primary action in a panel. A chosen toggle gets white silk, never gold. Peacock appears only in forward mode.", "section": "colors" },
+      { "name": "The Fixed Figure Rule", "body": "Every counted figure is Khand with `tabular-nums lining-nums`, and it ticks to its new value over 520ms (ease-out cubic) rather than swapping. Inline figures in prose are gold-light at 1.12em.", "section": "typography" },
+      { "name": "The Model Thread Rule", "body": "Modelled data looks unfinished. A modelled PM2.5 numeral drops to cream with a 2px dashed underline (offset 8px); modelled cells in the border's PM strip drop to 45% opacity and 60% height.", "section": "typography" },
+      { "name": "The Proud Thread Rule", "body": "Stitches cast only a soft ~1px contact shadow, as thread on cloth would. Nothing on the cloth emits light.", "section": "elevation" },
+      { "name": "The Running Stitch Edge Rule", "body": "Controls, panel hems and traced paths are dashed stitches, never solid strokes: tags and fields at 1.5px, panel hems at 32% white, the thread at 1.8/1.1 dash, siblings at 1.4/1.6, the border hems at 5/4. Only the basemap's sunk lines (indigo regions and districts, 30% cream borders) stay solid.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do set every new surface on night madder (ground-night) with the weave texture and a 6px-inset dashed hem.",
+      "Do make every panel control a cloth tag: 1.5px dashed stitch, 7px radius, Khand 600 label.",
+      "Do keep the sew tied to the data: the thread draws over 2200ms (ease-out cubic) along the real trace, and fires light only as the needle reaches them.",
+      "Do pair every AQI colour with its band name or a number; the colour never stands alone.",
+      "Do honour reduced motion: CSS animation off, and the sew, ticks and camera moves resolve instantly.",
+      "Do bundle Khand and Mukta locally; no font or library CDN."
+    ],
+    "donts": [
+      "Don't build a near-black dashboard map with glowing dots and a stats sidebar.",
+      "Don't draw the air path as a solid, glowing or gradient line; it is always running stitch with a proud shadow.",
+      "Don't put gold satin on a toggle or a second action in the same panel; chosen toggles are white silk.",
+      "Don't use peacock outside forward mode, or for anything but the forward thread, its marks and the towns beneath it.",
+      "Don't let any other line on the map match the traced thread's brightness."
+    ]
+  }
+}

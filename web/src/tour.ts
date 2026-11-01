@@ -78,8 +78,8 @@ export class Tour {
         hold: 9000,
         caption: () => {
           const r = a.last!;
-          const top = r.regionShares.filter((x) => x.share >= 0.05).slice(0, 2).map((x) => `${x.name}, ${pct(x.share)}`).join("; ");
-          return `Sewn back 48 hours along the real wind, the air crossed <b class="num">${fmtInt(r.firesOnPath)}</b> satellite fire ${plural(r.firesOnPath, "detection")}${top ? ` (${top})` : ""}. Each gold diamond is one burning field.`;
+          const top = r.regionShares.filter((x) => x.share >= 0.05).slice(0, 2).map((x) => `${x.name} ${pct(x.share)}`).join(", ");
+          return `Sewn back 48 hours along the real wind, the air crossed <b class="num">${fmtInt(r.firesOnPath)}</b> satellite fire ${plural(r.firesOnPath, "detection")}${top ? ` — ${top}` : ""}. Each gold diamond is one detection.`;
         },
         run: async () => {
           await a.trace(true);

@@ -26,15 +26,16 @@ VOICE = "en-IN-NeerjaNeural"
 RATE = "+12%"
 VIEW = {"width": 1600, "height": 900}
 LEAD_MS = 450      # pause after a caption appears before the voice starts
-TAIL_MS = 700      # breathing room after each line
+TAIL_MS = 400      # breathing room after each line
+PRE_ROLL = 2.4     # seconds of camera move kept before each tour caption
 
 INTRO = ("Every smog season, Delhi's air turns grey, and everyone blames someone else. "
          "So I built a map that follows the air itself. Whose smoke is it?")
-ARCH = ("How it works. Four open datasets on the Registry of Open Data on AWS: NOAA satellite fires, "
-        "OpenAQ stations, Overture districts, and hourly wind. Every morning a Lambda container traces "
-        "the wind for each city and writes the season to Apache Iceberg tables on Amazon S3 Tables, queried with Athena. "
-        "The map runs on S3 and CloudFront, with Amazon Location Service for the India-view basemap, search, "
-        "reverse geocoding and road distance.")
+ARCH = ("How it works. Four open datasets from the Registry of Open Data on AWS: NOAA satellite fires, "
+        "OpenAQ stations, Overture districts, and hourly wind. A daily Lambda container traces the wind "
+        "and writes the season to Apache Iceberg tables on Amazon S3 Tables, queried with Athena. "
+        "The map runs on S3 and CloudFront, with Amazon Location Service for the India-view basemap, "
+        "search, geocoding and road distance.")
 OUTRO = ("Smoke has no border, and this map blames no one. It shows where the air has been. "
          "Search your own town. The code is open for any smoky city to reuse.")
 
@@ -54,6 +55,7 @@ def spoken(caption: str) -> str:
     s = re.sub(r"\b(\d{1,2}) Oct\b", r"\1 October", s)
     s = s.replace(" µg/m³ of PM2.5", " micrograms of P M 2.5", 1).replace(" µg/m³", "").replace("PM2.5", "P M 2.5")
     s = re.sub(r" \(([^();]+), (\d+)%; ([^();]+), (\d+)%\)", r", \2 percent in \1 and \4 percent in \3", s)
+    s = re.sub(r" — ([^,.]+?) (\d+)%, ([^,.]+?) (\d+)%", r", \2 percent in \1 and \4 percent in \3", s)
     s = s.replace("%", " percent").replace(" am.", " a.m.").replace(" pm.", " p.m.")
     if s.startswith("Your turn."):
         s = "Your turn. Search your town, click anywhere on the map, or drag the border to any hour since the first of October."
@@ -166,23 +168,36 @@ def card_clip(name: str, seconds: float) -> Path:
 
 
 def tour_clip() -> Path:
+    """One window per chapter: the camera move into it, then its narrated caption.
+
+    Software rendering stretches the page's timers, so the raw recording has dead
+    air between chapters; cutting per chapter keeps the edit tight and in sync.
+    """
     marks = json.loads((BUILD / "marks.json").read_text())
-    start = max(0.0, marks["loaded"] + 2.5)   # skip the blank first seconds while tiles load
-    end = marks["end"] + 0.6
     n = len([k for k in marks if k.isdigit()])
-    inputs, filt, labels = [], [], []
+    segs, prev_end = [], marks["loaded"] + 1.5
     for i in range(n):
-        inputs += ["-i", str(BUILD / f"vo-ch{i}.mp3")]
-        ms = int((marks[str(i)] - start) * 1000 + LEAD_MS)
-        filt.append(f"[{i + 1}:a]adelay={ms}|{ms}[a{i}]")
-        labels.append(f"[a{i}]")
-    filt.append(f"{''.join(labels)}amix=inputs={n}:normalize=0:dropout_transition=0[a]")
+        m = marks[str(i)]
+        vo = duration(BUILD / f"vo-ch{i}.mp3")
+        s = max(prev_end, m - PRE_ROLL)
+        e = m + LEAD_MS / 1000 + vo + TAIL_MS / 1000
+        if i + 1 < n:
+            e = min(e, marks[str(i + 1)])
+        seg = BUILD / f"seg-{i}.mp4"
+        delay = int((m - s) * 1000 + LEAD_MS)
+        sh("ffmpeg", "-y", "-ss", f"{s:.2f}", "-to", f"{e:.2f}", "-i", str(BUILD / "tour.webm"),
+           "-i", str(BUILD / f"vo-ch{i}.mp3"),
+           "-filter_complex",
+           f"[0:v]scale=1920:1080:flags=lanczos,fps=30,setpts=PTS-STARTPTS[v];"
+           f"[1:a]adelay={delay}|{delay},apad,atrim=0:{e - s:.2f}[a]",
+           "-map", "[v]", "-map", "[a]", "-t", f"{e - s:.2f}", "-c:v", "libx264", "-pix_fmt", "yuv420p",
+           "-preset", "medium", "-crf", "18", "-c:a", "aac", "-b:a", "160k", "-ar", "48000", str(seg))
+        segs.append(seg)
+        prev_end = e
+    lst = BUILD / "tour-concat.txt"
+    lst.write_text("".join(f"file '{p.as_posix()}'\n" for p in segs), encoding="utf-8")
     out = BUILD / "clip-tour.mp4"
-    sh("ffmpeg", "-y", "-ss", f"{start:.2f}", "-to", f"{end:.2f}", "-i", str(BUILD / "tour.webm"), *inputs,
-       "-filter_complex",
-       f"[0:v]scale=1920:1080:flags=lanczos,fps=30,setpts=PTS-STARTPTS,fade=t=in:st=0:d=0.5[v];" + ";".join(filt),
-       "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "medium", "-crf", "18",
-       "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-shortest", str(out))
+    sh("ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(lst), "-c", "copy", str(out))
     return out
 
 

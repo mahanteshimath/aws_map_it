@@ -51,11 +51,12 @@ export function dyeStyle(style: StyleSpecification, ownLabels: string[] = []): S
         // masks hide the default line where India's view differs; they must match the cloth
         l.paint["line-color"] = C.ground;
       } else if (id.startsWith("admin_country")) {
+        // borders stay quiet so the traced thread is the one bright edge; India-Pakistan stays legible
         l.paint["line-color"] = C.cream;
-        l.paint["line-opacity"] = 0.62;
+        l.paint["line-opacity"] = 0.3;
       } else if (id.startsWith("admin_region")) {
-        l.paint["line-color"] = C.cream;
-        l.paint["line-opacity"] = 0.24;
+        l.paint["line-color"] = C.indigo;
+        l.paint["line-opacity"] = 0.7;
       } else if (id.startsWith("road_")) {
         l.paint["line-color"] = "#80303d";
         l.paint["line-opacity"] = 0.7;

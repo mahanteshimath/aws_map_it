@@ -214,14 +214,14 @@ class App {
     map.addLayer({
       id: "thread-shadow", type: "line", source: "thread",
       layout: { "line-cap": "round", "line-join": "round" },
-      paint: { "line-color": "#14040a", "line-width": 4.6, "line-opacity": 0.45, "line-translate": [0.8, 1.4], "line-blur": 1 },
+      paint: { "line-color": "#14040a", "line-width": ["interpolate", ["linear"], ["zoom"], 4, 5.6, 9, 8], "line-opacity": 0.5, "line-translate": [0.9, 1.6], "line-blur": 1 },
     });
     map.addLayer({
       id: "thread", type: "line", source: "thread",
       layout: { "line-cap": "butt", "line-join": "round" },
       paint: {
         "line-color": ["case", ["==", ["get", "mode"], "fwd"], C.peacock, C.white],
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4, 2.4, 9, 4],
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3.4, 9, 5.5],
         "line-dasharray": [1.8, 1.1],
       },
     });
@@ -231,9 +231,14 @@ class App {
       layout: {
         "icon-image": "fire-lit", "icon-allow-overlap": true, "icon-ignore-placement": true,
         "symbol-sort-key": ["get", "frp"],
-        "icon-size": ["interpolate", ["linear"], ["zoom"], 4, ["*", 0.42, byFrp], 8, ["*", 1, byFrp], 11, ["*", 1.5, byFrp]],
+        "icon-size": ["interpolate", ["linear"], ["zoom"], 4, ["*", 0.6, byFrp], 8, ["*", 1.15, byFrp], 11, ["*", 1.6, byFrp]],
       },
-      paint: { "icon-opacity": ["interpolate", ["linear"], ["get", "w"], 0, 0.55, 1, 1] },
+      // each diamond lights as the needle passes it (feature-state "lit", set while sewing)
+      paint: {
+        "icon-opacity": ["case", ["boolean", ["feature-state", "lit"], false],
+          ["interpolate", ["linear"], ["get", "w"], 0, 0.6, 1, 1], 0.14],
+        "icon-opacity-transition": { duration: 260 },
+      },
     });
     map.addLayer({
       id: "towns-hit", type: "circle", source: "towns-hit",
@@ -479,18 +484,37 @@ class App {
     });
 
     const sew = ++this.sewing;
+    // the hour along the centre thread nearest each crossed fire, so it lights as the needle passes
+    const litAt: [number, number][] = [];
+    for (let i = 0; i < r.weights.length; i++) {
+      if (!r.weights[i]) continue;
+      let best = 0, bd = Infinity;
+      for (let h = 0; h < mainCoords.length; h++) {
+        const d = (mainCoords[h][0] - r.fires.lon[i]) ** 2 + (mainCoords[h][1] - r.fires.lat[i]) ** 2;
+        if (d < bd) { bd = d; best = h; }
+      }
+      litAt.push([best, i]);
+    }
+    litAt.sort((a, b) => a[0] - b[0]);
+    map.removeFeatureState({ source: "fires" });
+    let litUpTo = 0;
     const setThread = (n: number) => {
       const c = mainCoords.slice(0, Math.max(2, n));
       (map.getSource("thread") as GeoJSONSource).setData({ type: "Feature", properties: { mode: r.mode }, geometry: { type: "LineString", coordinates: c } });
       (map.getSource("head") as GeoJSONSource).setData({ type: "Feature", properties: { mode: r.mode }, geometry: { type: "Point", coordinates: c[c.length - 1] } });
       (map.getSource("ticks") as GeoJSONSource).setData({ type: "FeatureCollection", features: ticks.slice(0, Math.floor(n / 6)) });
+      const reach = n >= mainCoords.length ? Infinity : n;
+      while (litUpTo < litAt.length && litAt[litUpTo][0] < reach) {
+        map.setFeatureState({ source: "fires", id: litAt[litUpTo][1] }, { lit: true });
+        litUpTo++;
+      }
     };
     if (mainCoords.length < 2) {
       setThread(0);
     } else if (!animate) {
       setThread(mainCoords.length);
     } else {
-      const start = performance.now(), dur = 1700;
+      const start = performance.now(), dur = 2200;
       const step = (now: number) => {
         if (sew !== this.sewing) return;
         const k = Math.min(1, (now - start) / dur);

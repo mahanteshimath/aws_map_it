@@ -7,7 +7,9 @@
   <meta name="description" content="Click any place and hour this season: the map sews the air back 48 hours along the real wind and lights up the satellite-detected farm fires it crossed, beside measured PM2.5. Open data on AWS + Amazon Location Service." />
   <meta property="og:title" content="Whose Smoke Is It?" />
   <meta property="og:description" content="Trace the air any North Indian city breathes back to the farm fires it crossed, hour by hour, this smog season." />
-  <meta property="og:image" content="/og.png" />
+  <meta property="og:image" content="https://d1wlimk0cn6w6a.cloudfront.net/og.png" />
+  <meta property="og:url" content="https://d1wlimk0cn6w6a.cloudfront.net/" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#3e0c17" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 </head>
@@ -28,13 +30,13 @@
           <span id="pm-note" class="pm-note"></span>
         </span>
       </div>
+      <button id="play" type="button" class="tag satin play">Play the story</button>
       <div id="mode" class="tags mode" role="group" aria-label="Direction">
         <button type="button" class="tag" data-mode="back" aria-pressed="true">Where did this air come from?</button>
         <button type="button" class="tag" data-mode="fwd" aria-pressed="false">Where does it go next?</button>
       </div>
       <div id="finding" class="finding" aria-live="polite"><p>Sewing the season…</p></div>
       <p id="season" class="season"></p>
-      <button id="play" type="button" class="tag satin play">Play the story</button>
     </section>
 
     <div class="tools">
@@ -62,8 +64,8 @@
         <button id="border-play" type="button" class="tag mini" aria-pressed="false">Play season</button>
         <span class="border-label"></span>
         <span class="legend" aria-hidden="true">
-          <i class="lg-fire"></i>fires on the air's path
-          <i class="lg-pm"></i>PM2.5 (faint = model)
+          <i class="lg-fire"></i>fires on the air's path (NOAA VIIRS)
+          <i class="lg-pm"></i>PM2.5 (OpenAQ stations; faint = CAMS model)
         </span>
       </div>
       <canvas id="border-canvas" tabindex="0" role="slider" aria-label="Season timeline: choose the hour the air arrived"
