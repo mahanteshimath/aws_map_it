@@ -346,6 +346,7 @@ class App {
   async trace(animate: boolean): Promise<TraceResult | null> {
     const seq = ++this.seq;
     const { m, origin, t, mode } = this;
+    if (!this.covers(origin.lat, origin.lon)) { this.offMap(); return null; }
     const p = m.trajectory;
     const span = p.hours * 3600;
     const field = mode === "back" ? await windFor(m, t - span, t) : await windFor(m, t, t + span);
@@ -413,6 +414,24 @@ class App {
     this.last = res;
     this.render(res, byDistrict, frpTotal, animate && !reducedMotion);
     return res;
+  }
+
+  /** Whether a point is on the wind grid: the only area with winds, fires and stations to trace. */
+  covers(lat: number, lon: number) {
+    const g = this.m.wind.grid;
+    return lat >= g.lat0 && lat <= g.lat0 + g.dlat * (g.nlat - 1) && lon >= g.lon0 && lon <= g.lon0 + g.dlon * (g.nlon - 1);
+  }
+
+  /** A place beyond the grid has nothing to sew: clear the last thread and let the plaque say why. */
+  private offMap() {
+    this.last = null;
+    ++this.sewing;
+    const empty: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
+    for (const id of ["siblings", "thread", "ticks", "head", "fires", "towns-hit"]) (this.map.getSource(id) as GeoJSONSource).setData(empty);
+    this.map.removeFeatureState({ source: "districts" });
+    this.renderPlaque();
+    this.timeline.setTime(this.t);
+    this.writeUrl();
   }
 
   private districtAt(lat: number, lon: number): string | null {
@@ -595,6 +614,7 @@ class App {
     $("#place").textContent = this.origin.name;
     $("#when").textContent = fmtWhen(this.t);
     const pm = this.pmFor(this.t);
+    const off = !this.covers(this.origin.lat, this.origin.lon);
     const num = $("#pm");
     if (pm) {
       tick(num, Math.round(pm.v));
@@ -605,9 +625,16 @@ class App {
       $("#plaque").classList.toggle("is-model", pm.kind === "model");
     } else {
       num.textContent = "–";
-      $("#band").textContent = "No station";
+      $("#band").textContent = off ? "Off the map" : "No station";
       $("#band").style.setProperty("--band", "rgba(233,215,184,0.4)");
-      $("#pm-note").textContent = "No PM2.5 station within 25 km at this hour";
+      $("#pm-note").textContent = off ? "Outside the area this map covers" : "No PM2.5 station within 25 km at this hour";
+      $("#plaque").classList.remove("is-model");
+    }
+    if (off) {
+      const g = this.m.wind.grid;
+      $("#finding").innerHTML = `<p>${esc(this.origin.name)} is beyond the plains this map traces: north India and Pakistan, ${g.lat0}–${g.lat0 + g.dlat * (g.nlat - 1)}° N. The wind, fire and station records stop at that edge.</p><p>Pick a city above, search a town on the plain, or click the cloth.</p>`;
+      $("#season").innerHTML = "";
+      return;
     }
     if (!r) return;
     const lines: string[] = [];
@@ -693,7 +720,8 @@ class App {
       input.value = s.title;
       const pos = await placePosition(this.cfg, s.id).catch(() => null);
       if (!pos) return;
-      this.map.flyTo({ center: pos, zoom: Math.max(this.map.getZoom(), 6), duration: reducedMotion ? 0 : 1200 });
+      // off-grid places sit outside maxBounds; leave the camera on the plain and let the plaque explain
+      if (this.covers(pos[1], pos[0])) this.map.flyTo({ center: pos, zoom: Math.max(this.map.getZoom(), 6), duration: reducedMotion ? 0 : 1200 });
       this.setOrigin({ lon: pos[0], lat: pos[1], name: s.title, cityId: null }, false);
     };
     if (!this.cfg) { input.disabled = true; input.placeholder = "Search needs the Location key"; return; }
